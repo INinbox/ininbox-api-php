@@ -3,7 +3,8 @@ require_once("config.php");
 require_once("lib/INinboxAPI.class.php");
 require_once("lib/INinboxList.class.php");
 $action=$_GET['action'];
-//$action="stats";
+
+# Getting all lists
 if($action=="list") {
 	try {
 		$list_obj = new INinboxList();
@@ -13,11 +14,8 @@ if($action=="list") {
 		$param = array();
 		$param['Page']=1;
 		$param['PageSize']=100;
-		$param['Status']='active'; // 
-		//$conObj = new INinboxList($ininbox);
-		//print_r($conObj);
+		$param['Status']='active';
 		$list = $list_obj->get($param);
-		// print_r($list);exit;
 	}
 	catch (Exception $e)
 	{
@@ -55,13 +53,15 @@ if($action=="list") {
 	<?
 	}
 }
+
+# Get details of a list
 else if($action=="detail") {
-	$list_obj = new INinboxListDetail();
-	$list_obj->debug = false;
-	$list_obj->setFormat("xml");
-	$list_obj->setToken($api_key);
 	try {
-		$list_id = 160;
+		$list_obj = new INinboxListDetail();
+		$list_obj->debug = false;
+		$list_obj->setFormat("xml");
+		$list_obj->setToken($api_key);
+		$list_id = 236;
 		$list = $list_obj->findById($list_id);
 	}
 	catch (Exception $e)
@@ -187,6 +187,7 @@ else if($action=="detail") {
 			<td valign="top">Email Notifications</td>
 			<td valign="top" align="center">:</td>
 			<td>
+				<?if(count($list->getEmailNotification())) { ?>
 				<table border=1 cellspacing=0 width=50%>
 				<tr bgcolor="#8ad9ff"><th>#</th><th align="left">Email Address</th></tr>
 				<? 
@@ -197,23 +198,24 @@ else if($action=="detail") {
 					</tr>
 				<? } ?>
 				</table>
-				<?//echo "<pre>";print_r($list->getOptIn());?>
+				<? } ?>
 			</td>
 		</tr>
 		
 		</table>
 	<? } 
 }
+
+# Get list of active subscribers
 else if($action=="active_subscribers") {
 	require_once("lib/INinboxListSubscribers.class.php");
-	
 	try {
 		
 		$list_obj = new INinboxList();
 		$list_obj->debug = false;
 		$list_obj->setFormat("xml");
 		$list_obj->setToken($api_key);
-		$list_id = 160;
+		$list_id = 236;
 		$param = array();
 		$param['Page']=1;
 		$param['PageSize']=100;
@@ -254,7 +256,6 @@ else if($action=="active_subscribers") {
 					<td><?=$active_subscribers[$k]->getStatus();?>&nbsp;</td>
 					<td><?
 					$customfield_all = $active_subscribers[$k]->getCustomFields();
-					//echo "<pre>";print_r($customfield_all);
 					if(count($customfield_all)){
 
 						?>					
@@ -264,7 +265,6 @@ else if($action=="active_subscribers") {
 						$fields = array();
 						foreach($customfield_all as $key=>$val)
 						{
-							//$fields[] = (string)$val->Key;
 							$fields[(string)$val->Key][] = $val->Value;
 						}
 						foreach($fields as $f=>$fv)
@@ -288,6 +288,7 @@ else if($action=="active_subscribers") {
 	}
 }
 
+# Get list of unsubscribed subscribers
 else if($action=="unsubscribed_subscribers") {
 	require_once("lib/INinboxListSubscribers.class.php");
 	
@@ -296,7 +297,7 @@ else if($action=="unsubscribed_subscribers") {
 		$list_obj->debug = false;
 		$list_obj->setFormat("xml");
 		$list_obj->setToken($api_key);
-		$list_id = 160;
+		$list_id = 84;
 		$param = array();
 		$param['Page']=1;
 		$param['PageSize']=100;
@@ -337,7 +338,6 @@ else if($action=="unsubscribed_subscribers") {
 					<td><?=$unsubscribed_subscribers[$k]->getStatus();?>&nbsp;</td>
 					<td><?
 					$customfield_all = $unsubscribed_subscribers[$k]->getCustomFields();
-					//echo "<pre>";print_r($customfield_all);
 					if(count($customfield_all) > 0){
 
 						?>					
@@ -347,7 +347,6 @@ else if($action=="unsubscribed_subscribers") {
 						$fields = array();
 						foreach($customfield_all as $key=>$val)
 						{
-							//$fields[] = (string)$val->Key;
 							$fields[(string)$val->Key][] = $val->Value;
 						}
 						foreach($fields as $f=>$fv)
@@ -372,6 +371,7 @@ else if($action=="unsubscribed_subscribers") {
 	}
 }
 
+# Get list of unconfirmed subscribers
 else if($action=="unconfirmed_subscribers") {
 	require_once("lib/INinboxListSubscribers.class.php");
 	try {
@@ -379,7 +379,7 @@ else if($action=="unconfirmed_subscribers") {
 		$list_obj->debug = false;
 		$list_obj->setFormat("xml");
 		$list_obj->setToken($api_key);
-		$list_id = 55;
+		$list_id = 574;
 		$param = array();
 		$param['Page']=1;
 		$param['PageSize']=100;
@@ -429,7 +429,6 @@ else if($action=="unconfirmed_subscribers") {
 						$fields = array();
 						foreach($customfield_all as $key=>$val)
 						{
-							//$fields[] = (string)$val->Key;
 							$fields[(string)$val->Key][] = $val->Value;
 						}
 						foreach($fields as $f=>$fv)
@@ -452,16 +451,15 @@ else if($action=="unconfirmed_subscribers") {
 	<?
 	}
 }
-
+# Get list of bounced subscribers
 else if($action=="bounced_subscribers") {
 	require_once("lib/INinboxListSubscribers.class.php");
-	
 	try {
 		$list_obj = new INinboxList();
 		$list_obj->debug = false;
 		$list_obj->setFormat("xml");
 		$list_obj->setToken($api_key);
-		$list_id = 55;
+		$list_id = 84;
 		$param = array();
 		$param['Page']=1;
 		$param['PageSize']=100;
@@ -511,7 +509,6 @@ else if($action=="bounced_subscribers") {
 						$fields = array();
 						foreach($customfield_all as $key=>$val)
 						{
-							//$fields[] = (string)$val->Key;
 							$fields[(string)$val->Key][] = $val->Value;
 						}
 						foreach($fields as $f=>$fv)
@@ -534,7 +531,7 @@ else if($action=="bounced_subscribers") {
 	<?
 	}
 }
-
+## Get list of deleted subscribers
 else if($action=="deleted_subscribers") {
 	require_once("lib/INinboxListSubscribers.class.php");
 	try {
@@ -542,7 +539,7 @@ else if($action=="deleted_subscribers") {
 		$list_obj->debug = false;
 		$list_obj->setFormat("json");
 		$list_obj->setToken($api_key);
-		$list_id = 55;
+		$list_id = 84;
 		$param = array();
 		$param['Page']=1;
 		$param['PageSize']=100;
@@ -592,7 +589,6 @@ else if($action=="deleted_subscribers") {
 						$fields = array();
 						foreach($customfield_all as $key=>$val)
 						{
-							//$fields[] = (string)$val->Key;
 							$fields[(string)$val->Key][] = $val->Value;
 						}
 						foreach($fields as $f=>$fv)
@@ -616,6 +612,7 @@ else if($action=="deleted_subscribers") {
 	}
 }
 
+# Get Statitics of a list
 else if($action=="stats") {
 	
 	try {
@@ -625,7 +622,6 @@ else if($action=="stats") {
 		$list_obj->setToken($api_key);
 		$listid = 160;
 		$list = $list_obj->findStatsById($listid);
-		//echo "<pre>";print_r($list);exit;
 		if(isset($list)) {?>
 			<div><h2>List Stats</h2></div>
 			<table width="100%" cellpadding="2" cellspacing="5" border="0" style="border:1px solid" bgcolor="#ffffcc">
@@ -681,7 +677,6 @@ else if($action=="stats") {
 			</tr>
 			</table>
 		<? } 
-		//echo "<pre>";print_r($list);exit;
 	}
 	catch(Exception $e)
 	{
@@ -690,12 +685,14 @@ else if($action=="stats") {
 	}
 }
 
+# Creating a list
 else if($action=="add") {
-	$list_obj = new INinboxListDetail();
-	$list_obj->debug = true;
-	$list_obj->setFormat("xml");
-	$list_obj->setToken($api_key);
 	try {
+		$list_obj = new INinboxListDetail();
+		$list_obj->debug = false;
+		$list_obj->setFormat("xml");
+		$list_obj->setToken($api_key);
+
 		$list_obj->setTitle("Testing Started JSON");
 		$list_obj->setConfirmedOptIn(true);
 		$list_obj->setCompanyName("TST");
@@ -718,13 +715,16 @@ Country: ##user_country##");
 		echo "<br />Error Code: ".$e->getCode();
 	}
 }
+
+# Updating a list
 else if($action=="update") {
-	$list_obj = new INinboxListDetail();
-	$list_obj->debug = false;
-	$list_obj->setFormat("xml");
-	$list_obj->setToken($api_key);
-	$list_id = "272";
 	try {
+		$list_obj = new INinboxListDetail();
+		$list_obj->debug = false;
+		$list_obj->setFormat("xml");
+		$list_obj->setToken($api_key);
+		$list_id = "2468";
+
 		$conf_setting_arr = array("Type"=>"Plain", "FromFieldID" => 17, "ReplyToFieldID" => 42, "Subject" => "Confirmation Request.", "Body" => "Hi ##firstname## ##CONFIRM_URL##");
 
 		$conf_sub_arr = array("LogoType" => "INInbox", "LogoURL" => "http://192.168.32.141/images/logo.png", "WebsiteURL" => "http://www.yourdomain.com", "Description" => "Testing API List Update", "ConfirmationPageURL" => "http://www.yourdomain.com");
@@ -733,7 +733,7 @@ else if($action=="update") {
 
 		$webhook_arr = array("SubscriptionURL" => "http://www.ininbox.com", "UnsubscriptionURL" => "http://www.ininbox.com", "HardBounceURL" => "http://www.ininbox.com", "SPAMComplaintURL" => "http://www.ininbox.com");
 		
-		$email_arr = array("demo11@demo.com", "demo12@demo.com", "demo13@demo.com", "demo14@demo.com");
+		$email_arr = array("demo11@demo.com", "demo12@demo.com", "demo13@demo.com");
 
 		$list_obj->setListID($list_id);
 		$list_obj->setTitle("Testing Started JSON");
@@ -764,21 +764,29 @@ Country: ##user_country##");
 	}
 }
 else if($action=="delete") {
-	$listid = 270;
-	$list_obj = new INinboxList();
-	$list_obj->debug = false;
-	$list_obj->setFormat("json");
-	$list_obj->setToken($api_key);
-	$list_obj->setListID($listid);
+	$listid = 274;
 	try
 	{
+		$list_obj = new INinboxList();
+		$list_obj->debug = false;
+		$list_obj->setFormat("json");
+		$list_obj->setToken($api_key);
+		$list_obj->setListID($listid);
+
 		$res = $list_obj->delete();
-		echo $res['Message'];
-		exit;
+		echo $res['Message'];exit;
 	}
 	catch (Exception $e)
 	{
 		echo "Error Message: ".$e->getMessage();
 		echo "<br />Error Code: ".$e->getCode();
+	}
+}
+else{
+	if($action==""){
+		echo ACTION_NOT_FOUND;
+	}
+	else{
+		echo sprintf(INVALID_ACTION, 'list, detail, add, update, delete, stats, active_subscribers, unsubscribed_subscribers, unconfirmed_subscribers, bounced_subscribers or deleted_subscribers');
 	}
 }

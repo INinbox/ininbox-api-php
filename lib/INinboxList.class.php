@@ -1,6 +1,4 @@
 <?php
-# Created by MS as on Friday, March 06, 2014
-# Modified by MS as on Saturday, March 07, 2014
 class INinboxList extends INinboxAPI
 {
 	/**
@@ -35,7 +33,6 @@ class INinboxList extends INinboxAPI
 	 */
 	public function loadFromObject($obj)
 	{
-		//echo "<pre>";print_r($obj);
 		if(isset($obj->{'ListID'}))
 			$this->setListID((int)$obj->{'ListID'});
 		$this->setTitle($obj->{'Title'});
@@ -720,7 +717,6 @@ class INinboxListDetail extends INinboxList
 		if($this->getFormat() == "xml"){
 			
 			# Creating seperate tag of CustomField
-			//echo "<pre>";print_r($this->getEmailNotification());//exit;
 			if(count($this->getEmailNotification())>0){
 				$cf_arr = array();
 				foreach($this->getEmailNotification() as $ind=>$data){
@@ -733,7 +729,6 @@ class INinboxListDetail extends INinboxList
 		else{
 			$person_xml = $this->toJSON();
 		}
-		//echo $person_xml;exit;
 		if ($this->getListID() != null)
 		{
 			$new_xml = $this->postDataWithVerb("/lists/" . $this->getListID() . "/update.".$this->getFormat(), $person_xml, "PUT");
@@ -744,7 +739,13 @@ class INinboxListDetail extends INinboxList
 			$new_xml = $this->postDataWithVerb("/lists/create.".$this->getFormat(), $person_xml, "POST");
 			$this->checkForErrors("List", 201);
 		}
-		return true;
+		if($this->getFormat() == "xml") {
+			$object = simplexml_load_string($new_xml);
+		}
+		else if($this->getFormat() == "json") {
+			$object = json_decode($new_xml);
+		}
+		return (array)$object;
 	}
 	
 	/**
@@ -752,12 +753,8 @@ class INinboxListDetail extends INinboxList
 	 */
 	public function toXML()
 	{
-		
-		//echo $obj->url;exit;
 		$xml[] = "<?xml version='1.0' encoding='utf-8'?><List>";
 		
-		// TODO: Update ListID
-		// TODO: Get ListID
 		$fields = array("Title", "ConfirmedOptIn", "CompanyName", "Address", "City", "StateCode", "CountryCode", "Zip", "PostalAddress", "ConfirmationSetting", "CustomConfirmationPage", "CustomUnsubscribePage", "Webhook", "EmailNotification");
 		
 		if ($this->getListID() != null)
@@ -822,7 +819,6 @@ class INinboxListDetail extends INinboxList
 		}
 
 		$xml[] = "</List>";
-		//echo "<pre>";print_R($xml);exit;
 		return implode("\n", $xml);
 	}
 	
@@ -839,21 +835,46 @@ class INinboxListDetail extends INinboxList
 				$json[$field] = $this->$field;
 			}
 		}
-		//echo json_encode($json);exit;
 		return json_encode($json);
 	}
-
 }
 
 class INinboxListStats extends INinboxList
 {
-	private $NewActiveSubscribersToday;
-	private $NewActiveSubscribersYesterday;
-	private $NewActiveSubscribersThisWeek;
-	private $TotalActiveSubscribers;
-	private $TotalUnsubscribes;
-	private $TotalUsedInBroadcasts;
-	private $TotalCreatedAutoresponders;
+	/**
+	 * @var int
+	 */
+	public $NewActiveSubscribersToday;
+
+	/**
+	 * @var int
+	 */
+	public $NewActiveSubscribersYesterday;
+
+	/**
+	 * @var int
+	 */
+	public $NewActiveSubscribersThisWeek;
+
+	/**
+	 * @var int
+	 */
+	public $TotalActiveSubscribers;
+
+	/**
+	 * @var int
+	 */
+	public $TotalUnsubscribes;
+
+	/**
+	 * @var int
+	 */
+	public $TotalUsedInBroadcasts;
+
+	/**
+	 * @var int
+	 */
+	public $TotalCreatedAutoresponders;
 	
 	/**
 	 * @param object $obj Data Object

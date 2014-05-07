@@ -829,8 +829,15 @@ class INinboxAutoresponderAction extends INinboxAutoresponders
 	 */
 	public function delete()
 	{
-		$this->postDataWithVerb("/lists/" . $this->getListID() . "/autoresponders/" . $this->getAutoresponderID() ."/delete.xml", "", "DELETE");
+		$result = $this->postDataWithVerb("/lists/" . $this->getListID() . "/autoresponders/" . $this->getAutoresponderID() ."/delete.xml", "", "DELETE");
 		$this->checkForErrors("List", 200);	
+		if($this->getFormat() == "xml") {
+			$object = (array)simplexml_load_string($result);
+		}
+		else if($this->getFormat() == "json") {
+			$object = (array)json_decode($result);
+		}
+		return $object;
 	}
 }
 

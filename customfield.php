@@ -4,8 +4,10 @@ require_once("lib/INinboxAPI.class.php");
 include_once('lib/INinboxException.class.php');
 include_once('lib/INinboxFieldOption.class.php');
 $action = $_GET['action'];
+
+# Getting all customfields list
 if($action=="list") {
-	require_once("lib/INinboxContactCustomFields.class.php");
+	require_once("lib/INinboxCustomField.class.php");
 	try {
 		$customfields_obj = new INinboxContactCustomFields();
 		$customfields_obj->debug = false;
@@ -13,11 +15,11 @@ if($action=="list") {
 		$customfields_obj->setToken($api_key);
 		$param = array("Page"=>1, "PageSize" => 100);
 		$customfields = $customfields_obj->get($param);
-		//echo "<pre>";print_r($customfields);exit;
 	}
 	catch (Exception $e)
 	{
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
 	}
 	$cnt = count($customfields);
 	if($cnt > 0) { ?>
@@ -51,6 +53,8 @@ if($action=="list") {
 	<?
 	}
 }
+
+# Get all predefined email fields
 else if($action=="predefined") {
 	require_once("lib/INinboxCustomField.class.php");
 	try {
@@ -59,11 +63,11 @@ else if($action=="predefined") {
 		$customfields_obj->setFormat("xml");
 		$customfields_obj->setToken($api_key);
 		$customfields = $customfields_obj->get();
-		//echo "<pre>";print_r($data_arr);exit;
 	}
 	catch (Exception $e)
 	{
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
 	}
 	$cnt = count($customfields);
 	if($cnt > 0) { ?>
@@ -87,18 +91,20 @@ else if($action=="predefined") {
 	<?
 	}
 }
+
+# Creating a custom field
 else if($action=="add") {
-	require_once("lib/INinboxContactCustomFields.class.php");
+	require_once("lib/INinboxCustomField.class.php");
 	try {
 		$customfields_obj = new INinboxContactCustomFields();
 		$customfields_obj->debug = false;
 		$customfields_obj->setFormat("xml");
 		$customfields_obj->setToken($api_key);
 
-		$FieldName = "TestCF-21414";
-		$FieldDataType = "checkbox";
+		$FieldName = "Test - API";
+		$FieldDataType = "radio";
 		$FieldOption=array();
-		$FieldOption = array("Sports", "Travelling", "Music");
+		$FieldOption = array("First", "Second", "Third");
 		$VisibleInWebform="True";
 
 		$customfields_obj->setFieldOption($FieldOptions);
@@ -107,73 +113,91 @@ else if($action=="add") {
 		$customfields_obj->setFieldOption($FieldOption);
 		$customfields_obj->setVisibleInWebform($VisibleInWebform);
 		
-		$customfields_obj->save();
-		//print_r($conObj);exit;
+		$res = $customfields_obj->save();
+		echo $res['Message'];exit;
 	}
 	catch (Exception $e) {
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
 	}
 }
 
+# Updating a custom field
 else if($action=="update") {
-	require_once("lib/INinboxContactCustomFields.class.php");
+	require_once("lib/INinboxCustomField.class.php");
 	try {
 		$customfields_obj = new INinboxContactCustomFields();
 		$customfields_obj->debug = false;
 		$customfields_obj->setFormat("xml");
 		$customfields_obj->setToken($api_key);
 
-		$CustomFieldID = 137;
+		$CustomFieldID = "486";
 		$FieldName = "TestCF-21414";
 		$VisibleInWebform = true;
 		
 		$customfields_obj->setCustomFieldID($CustomFieldID);
 		$customfields_obj->setFieldName($FieldName);
 		$customfields_obj->setVisibleInWebform($VisibleInWebform);
-		$customfields_obj->save();
-		//echo "<pre>";print_r($customfields_obj);exit;
+		$res = $customfields_obj->save();
+		echo $res['Message'];exit;
 	}
 	catch (Exception $e)
 	{
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
 	}
 }
+
+# Updating custom fields options
 else if($action=="update_fieldOption") {
-	require_once("lib/INinboxContactCustomFields.class.php");
+	require_once("lib/INinboxCustomField.class.php");
 	try {
 		$customfields_obj = new INinboxContactCustomFields();
 		$customfields_obj->debug = false;
 		$customfields_obj->setFormat("xml");
 		$customfields_obj->setToken($api_key);
 
-		$CustomFieldID = 137;
-		$FieldOption = array("Sports", "Travelling", "T1");
+		$CustomFieldID = "89";
+		$FieldOption = array("Sunday", "Monday", "Tuesday");
 		$KeepExistingOptions=false;
 		
 		$customfields_obj->setCustomFieldID($CustomFieldID);
 		$customfields_obj->setFieldOption($FieldOption);
 		$customfields_obj->setKeepExistingOptions($KeepExistingOptions);
-		$customfields_obj->saveFieldOption();
-		//print_r($customfields_obj);exit;
+		$res = $customfields_obj->saveFieldOption();
+		echo $res['Message'];exit;
 	}
 	catch (Exception $e) {
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
 	}
 }
+
+# Deleting a custom field
 else if($action=="delete") {
-	require_once("lib/INinboxContactCustomFields.class.php");
+	require_once("lib/INinboxCustomField.class.php");
 	try
 	{
 		$customfields_obj = new INinboxContactCustomFields();
 		$customfields_obj->debug = false;
 		$customfields_obj->setFormat("xml");
 		$customfields_obj->setToken($api_key);
-		$CustomFieldID = 136;
+		$CustomFieldID = "486";
 		$customfields_obj->setCustomFieldID($CustomFieldID);
-		$customfields_obj->delete();
+		$res = $customfields_obj->delete();
+		echo $res['Message'];exit;
 	}
 	catch (Exception $e)
 	{
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
+	}
+}
+else{
+	if($action==""){
+		echo ACTION_NOT_FOUND;
+	}
+	else{
+		echo sprintf(INVALID_ACTION, 'list, predefined, add, update, update_fieldOption or delete');
 	}
 }

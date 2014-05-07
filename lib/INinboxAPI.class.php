@@ -74,15 +74,12 @@ class INinboxAPI extends INinboxPaging
 
 	public function __construct()
 	{
-		
 		$this->format = "xml";
-		$this->url = "http://api.ininbox.com/v1";
+		$this->url = "http://192.168.32.141/v1";
 
 		$this->curl = curl_init();
 		curl_setopt($this->curl,CURLOPT_RETURNTRANSFER,true);
 
-		//curl_setopt($this->curl, CURLOPT_HTTPHEADER, array('Accept: application/xml', 'Content-Type: application/xml'));
-		// curl_setopt($curl,CURLOPT_POST,true);
 		curl_setopt($this->curl,CURLOPT_SSL_VERIFYPEER,0);
 		curl_setopt($this->curl,CURLOPT_SSL_VERIFYHOST,0);	
 	}
@@ -185,6 +182,9 @@ class INinboxAPI extends INinboxPaging
 	}
 	
 	/**
+	 * @param string $type
+	 * @param int $expected_status_codes
+	 *
 	 * @throws Exception
 	 */
 	protected function checkForErrors($type, $expected_status_codes = 200)
@@ -220,6 +220,9 @@ class INinboxAPI extends INinboxPaging
 				case 507:
 					throw new Exception("Cannot create $type: Insufficient storage in your INinbox Account");
 					break;
+				default:
+						throw new Exception("API for $type returned Status Code: " . $this->getLastReturnStatus() . " Expected Code: " . implode(",", $expected_status_codes));
+						break;
 			}				
 		}
 	}
@@ -256,3 +259,4 @@ class INinboxAPI extends INinboxPaging
 		$this->format=$format; // xml or json
 	}
 }
+?>

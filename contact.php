@@ -3,7 +3,8 @@ require_once("config.php");
 require_once("lib/INinboxAPI.class.php");
 require_once("lib/INinboxContact.class.php");
 $action=$_GET['action'];
-//$action="stats";
+
+# Getting all contacts
 if($action=="list") {
 	try {
 		$contact_obj = new INinboxContact();
@@ -14,7 +15,7 @@ if($action=="list") {
 		$param = array();
 		$param['Page']=1;
 		$param['PageSize']=20;
-		$param['Status']='active'; // 
+		$param['Status']='active';
 		$contact = $contact_obj->get($param);
 	}
 	catch (Exception $e)
@@ -64,7 +65,6 @@ if($action=="list") {
 						$fields = array();
 						foreach($customfield_all as $key=>$val)
 						{
-							//$fields[] = (string)$val->Key;
 							$fields[(string)$val->Key][] = $val->Value;
 						}
 						foreach($fields as $f=>$fv)
@@ -87,10 +87,10 @@ if($action=="list") {
 	<?
 	}
 }
+
+# Getting details of a contact
 else if($action=="detail") {
-	//$cid = 36510;
-	$cid = 36804;
-	//$cid = 20051;
+	$cid = 4283400;
 	try {
 		$ininbox_obj = new INinboxContact();
 		$ininbox_obj->debug = false;
@@ -100,7 +100,8 @@ else if($action=="detail") {
 	}
 	catch (Exception $e)
 	{
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
 	}
 	if(isset($contact)) {?>
 		<div><h2>Contact Details</h2></div>
@@ -123,7 +124,6 @@ else if($action=="detail") {
 		<tr>
 			<td>ProfileImage URL</td>
 			<td align="center">:</td>
-			<!-- td><a href="<?=$contact->getProfileImageURL()?>" target="_blank"><?=$contact->getProfileImageURL()?></a></td -->
 			<td><?=$contact->getProfileImageURL()?></td>
 		</tr>
 		<tr>
@@ -204,7 +204,6 @@ else if($action=="detail") {
 					</tr>
 				<? } ?>
 				</table>
-				<?//echo "<pre>";print_r($contact->getOptIn());?>
 			</td>
 		</tr>
 		<tr>
@@ -310,7 +309,6 @@ else if($action=="detail") {
 					<? $fields = array();
 					foreach($customfield_all as $key=>$val)
 					{
-						//$fields[] = (string)$val->Key;
 						$fields[(string)$val->Key][] = $val->Value;
 					}
 					foreach($fields as $f=>$fv)
@@ -334,21 +332,18 @@ else if($action=="detail") {
 		</table>
 	<? } 
 }
+# Creating a contact
 else if($action=="add") {
-	$format="json";
-	
 	$conObj = new INinboxContactDetail();
-	$conObj->debug = true;
-	$conObj->setFormat($format);
+	$conObj->debug = false;
+	$conObj->setFormat("json");
 	$conObj->setToken($api_key);
 
-	//echo "<pre>";print_r($ininbox);
 	try {
 		$customfield_arr=array();
-
 		$conObj->setFirstName("Final");
 		$conObj->setLastName("Test");
-		$conObj->setEmail("youremail@example103.com");
+		$conObj->setEmail("youremail45u@example105.in");
 		$conObj->setGender("F");
 		$conObj->setProfileImageURL("http://www.searchfirms.co.kr/images/sample_back.gif");
 		$conObj->setCompany("ABCL");
@@ -365,17 +360,15 @@ else if($action=="add") {
 		$conObj->setSendConfirmationEmail(false);
 		$conObj->setAddContactToAutoresponderCycle(true);
 
-		$lists_arr = array(160, 244);
+		$lists_arr = array(160);
 		$customfield_arr = 
 					array(
-						array("Key"=>"Hobby", "Value"=>"Sports"),
-						array("Key"=>"Hobby", "Value"=>"Travelling"),
-						array("Key"=>"Hobby", "Value"=>"Music")
+						array("Key"=>"Hobbies", "Value"=>"Sports"),
+						array("Key"=>"Hobbies", "Clear"=>true)
 					);
 		
 		$conObj->setListIDs($lists_arr);
 		$conObj->setCustomFields($customfield_arr);
-		//echo "<pre>";print_r($conObj);exit;
 		$res = $conObj->save();
 		echo $res['Message'];exit;
 	}
@@ -385,23 +378,22 @@ else if($action=="add") {
 		echo "<br />Error Code: ".$e->getCode();
 	}
 }
+
+# Updating a contact
 else if($action=="update") {
-	$format="xml";
-	
 	$conObj = new INinboxContactDetail();
 	$conObj->debug = false;
-	$conObj->setFormat($format);
+	$conObj->setFormat("xml");
 	$conObj->setToken($api_key);
 
 	try {
 		$customfield_arr=array();
 		$lists_arr=array();
-		$contact_id = 36805;
+		$contact_id = 4351626;
 		$conObj->setContactID($contact_id);
 		$conObj->setFirstName("Finally");
-		$conObj->setLastName("Tested");
-		$conObj->setEmail("youremail@example104.com");
-		$conObj->setGender("M");
+		$conObj->setLastName("Live");
+		$conObj->setGender("F");
 		$conObj->setProfileImageURL();
 		$conObj->setCompany("ABCL Co.");
 		$conObj->setAddress("24, abcl nagar,\nsafari town.");
@@ -414,20 +406,18 @@ else if($action=="update") {
 		$conObj->setWorkPhone("564594456");
 		$conObj->setFax("124512asdas");
 		$conObj->setResubscribe(true);
-		$conObj->setSendConfirmationEmail(false);
+		$conObj->setSendConfirmationEmail(true);
 		$conObj->setAddContactToAutoresponderCycle(true);
 
-		$lists_arr = array(160, 244);
+		$lists_arr = array(84);
 		$customfield_arr = 
 					array(
-						array("Key"=>"Hobby", "Value"=>"Sports"),
-						array("Key"=>"Hobby", "Value"=>"Travelling"),
-						array("Key"=>"Hobby", "Value"=>"Music")
+						array("Key"=>"ProviceWebservice", "Value"=>"Yes"),
+						array("Key"=>"ProviceWebservice", "Value"=>"Maybe")
 					);
 
 		$conObj->setListIDs($lists_arr);
 		$conObj->setCustomFields($customfield_arr);
-		//echo "<pre>";print_r($conObj);exit;
 		$res = $conObj->save();
 		echo $res['Message'];exit;
 	}
@@ -437,8 +427,10 @@ else if($action=="update") {
 		echo "<br />Error Code: ".$e->getCode();
 	}
 }
+
+# Deleting a contact
 else if($action=="delete") {
-	$contact_id = 36789;
+	$contact_id = "4351716";
 	$ininbox_obj = new INinboxContact();
 	$ininbox_obj->debug = false;
 	$ininbox_obj->setFormat("xml");
@@ -456,14 +448,16 @@ else if($action=="delete") {
 		echo "<br />Error Code: ".$e->getCode();
 	}
 }
-else if($action=="stats") {
-	$ininbox_obj = new INinboxContact();
-	$ininbox_obj->debug = false;
-	$ininbox_obj->setFormat("xml");
-	$ininbox_obj->setToken($api_key);
 
+# Get Statistics of all contacts of account
+else if($action=="stats") {
 	try {
+		$ininbox_obj = new INinboxContact();
+		$ininbox_obj->debug = false;
+		$ininbox_obj->setFormat("xml");
+		$ininbox_obj->setToken($api_key);
 		$contact = $ininbox_obj->getStatistics();
+
 		if(isset($contact)) {?>
 			<div><h2>Contact Stats</h2></div>
 			<table width="100%" cellpadding="2" cellspacing="5" border="0" style="border:1px solid" bgcolor="#ffffcc">
@@ -498,13 +492,19 @@ else if($action=="stats") {
 				<td><?=$contact->getAllContacts()?></td>
 			</tr>
 		<? } 
-		//echo "<pre>";print_r($contact);exit;
 	}
 	catch(Exception $e)
 	{
-		//echo $e->getCode().":".$e->getMessage();
 		echo "Error Message: ".$e->getMessage();
 		echo "<br />Error Code: ".$e->getCode();
+	}
+}
+else{
+	if($action==""){
+		echo ACTION_NOT_FOUND;
+	}
+	else{
+		echo sprintf(INVALID_ACTION, 'list, detail, add, update, delete or stats');
 	}
 }
 ?>

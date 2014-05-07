@@ -1,7 +1,4 @@
 <?php
-# -------------------------------------------------------------
-# Created by PN as on 6 Mar 2014
-# -------------------------------------------------------------
 class INinboxContact extends INinboxAPI
 {
 	/**
@@ -578,166 +575,19 @@ class INinboxContactDetail extends INinboxContact
 	public function setCompany($Company) {
 		$this->Company = (string)$Company;
 	}
-	
-	/**
-	 * @param string $ProfileImageURL ProfileImageURL
-	 */
-	public function setProfileImageURL($ProfileImageURL) {
-	  $this->ProfileImageURL = (string)$ProfileImageURL;
-	}
-
-	/**
-	 * @param string $Address Address
-	 */
-	public function setAddress($Address) {
-		$this->Address = (string)$Address;
-	}
-
-	/**
-	 * @param string $City City
-	 */
-	public function setCity($City) {
-	  $this->City = (string)$City;
-	}
-
-	/**
-	 * @param string $StateCode StateCode
-	 */
-	public function setStateCode($StateCode) {
-	  $this->StateCode = (string)$StateCode;
-	}
-
-	/**
-	 * @param string $State State
-	 */
-	public function setState($State) {
-	  $this->State = (string)$State;
-	}
-
-	/**
-	 * @param string $CountryCode CountryCode
-	 */
-	public function setCountryCode($CountryCode) {
-	  $this->CountryCode = (string)$CountryCode;
-	}
-
-	/**
-	 * @param string $Country Country
-	 */
-	public function setCountry($Country) {
-	  $this->Country = (string)$Country;
-	}
-
-	/**
-	 * @param string $PostalCode PostalCode
-	 */
-	public function setPostalCode($PostalCode) {
-	  $this->PostalCode = (string)$PostalCode;
-	}
-	
-	/**
-	 * @param string $HomePhone HomePhone
-	 */
-	public function setHomePhone($HomePhone) {
-	  $this->HomePhone = (string)$HomePhone;
-	}
-
-	/**
-	 * @param string $MobilePhone MobilePhone
-	 */
-	public function setMobilePhone($MobilePhone) {
-	  $this->MobilePhone = (string)$MobilePhone;
-	}
-
-	/**
-	 * @param string $WorkPhone WorkPhone
-	 */
-	public function setWorkPhone($WorkPhone) {
-	  $this->WorkPhone = (string)$WorkPhone;
-	}
-
-	/**
-	 * @param string $Fax Fax
-	 */
-	public function setFax($Fax) {
-	  $this->Fax = (string)$Fax;
-	}
-
-	/**
-	 * @param array $OptIn OptIn
-	 */
-	public function setOptIn($OptIn) {
-	  $this->Opt_In = $OptIn;
-	}
-
-	/**
-	 * @param array $ActiveLists ActiveLists
-	 */
-	public function setActiveLists($ActiveLists) {
-	  $this->ActiveLists = $ActiveLists;
-	}
-
-	/**
-	 * @param array $UnsubscribedLists UnsubscribedLists
-	 */
-	public function setUnsubscribedLists($UnsubscribedLists) {
-	  $this->UnsubscribedLists = $UnsubscribedLists;
-	}
-
-	/**
-	 * @param array $DeletedLists DeletedLists
-	 */
-	public function setDeletedLists($DeletedLists) {
-	  $this->DeletedLists = $DeletedLists;
-	}
-	
-	/**
-	 * @param array $UnconfirmedLists UnconfirmedLists
-	 */
-	public function setUnconfirmedLists($UnconfirmedLists) {
-	  $this->UnconfirmedLists = $UnconfirmedLists;
-	}
-
-	/**
-	 * @param array $BouncedLists BouncedLists
-	 */
-	public function setBouncedLists($BouncedLists) {
-	  $this->BouncedLists = $BouncedLists;
-	}
-
-	/**
-	 * @param array $ListIDs ListIDs
-	 */
-	public function setListIDs($ListIDs) {
-	  $this->ListIDs = $ListIDs;
-	}
-
-	/**
-	 * @param boolean $Resubscribe Resubscribe
-	 */
-	public function setResubscribe($Resubscribe) {
-	  $this->Resubscribe = $Resubscribe;
-	}
-
-	/**
-	 * @param boolean $SendConfirmationEmail SendConfirmationEmail
-	 */
-	public function setSendConfirmationEmail($SendConfirmationEmail) {
-	  $this->SendConfirmationEmail = $SendConfirmationEmail;
-	}
-
-	/**
-	 * @param boolean $AddContactToAutoresponderCycle AddContactToAutoresponderCycle
-	 */
-	public function setAddContactToAutoresponderCycle($AddContactToAutoresponderCycle) {
-	  $this->AddContactToAutoresponderCycle = $AddContactToAutoresponderCycle;
-	}
 
 	/**
 	 * @return string
 	 */
 	public function getCompany() {
 		return $this->Company;
+	}
+	
+	/**
+	 * @param string $ProfileImageURL ProfileImageURL
+	 */
+	public function setProfileImageURL($ProfileImageURL) {
+	  $this->ProfileImageURL = (string)$ProfileImageURL;
 	}
 
 	/**
@@ -748,10 +598,24 @@ class INinboxContactDetail extends INinboxContact
 	}
 
 	/**
+	 * @param string $Address Address
+	 */
+	public function setAddress($Address) {
+		$this->Address = (string)$Address;
+	}
+	
+	/**
 	 * @return string
 	 */
 	public function getAddress() {
 	  return $this->Address;
+	}
+
+	/**
+	 * @param string $City City
+	 */
+	public function setCity($City) {
+	  $this->City = (string)$City;
 	}
 
 	/**
@@ -762,10 +626,24 @@ class INinboxContactDetail extends INinboxContact
 	}
 
 	/**
+	 * @param string $StateCode StateCode
+	 */
+	public function setStateCode($StateCode) {
+	  $this->StateCode = (string)$StateCode;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getStateCode() {
 	  return $this->StateCode;
+	}
+
+	/**
+	 * @param string $State State
+	 */
+	public function setState($State) {
+	  $this->State = (string)$State;
 	}
 
 	/**
@@ -776,10 +654,24 @@ class INinboxContactDetail extends INinboxContact
 	}
 
 	/**
+	 * @param string $CountryCode CountryCode
+	 */
+	public function setCountryCode($CountryCode) {
+	  $this->CountryCode = (string)$CountryCode;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getCountryCode() {
 	  return $this->CountryCode;
+	}
+
+	/**
+	 * @param string $Country Country
+	 */
+	public function setCountry($Country) {
+	  $this->Country = (string)$Country;
 	}
 
 	/**
@@ -790,17 +682,38 @@ class INinboxContactDetail extends INinboxContact
 	}
 
 	/**
-	 * @return string
+	 * @param string $PostalCode PostalCode
 	 */
-	public function getPostalCode() {
-	  return $this->PostalCode;
+	public function setPostalCode($PostalCode) {
+	  $this->PostalCode = (string)$PostalCode;
 	}
 
 	/**
 	 * @return string
 	 */
+	public function getPostalCode() {
+	  return $this->PostalCode;
+	}
+	
+	/**
+	 * @param string $HomePhone HomePhone
+	 */
+	public function setHomePhone($HomePhone) {
+	  $this->HomePhone = (string)$HomePhone;
+	}
+	
+	/**
+	 * @return string
+	 */
 	public function getHomePhone() {
 	  return $this->HomePhone;
+	}
+
+	/**
+	 * @param string $MobilePhone MobilePhone
+	 */
+	public function setMobilePhone($MobilePhone) {
+	  $this->MobilePhone = (string)$MobilePhone;
 	}
 	
 	/**
@@ -811,10 +724,24 @@ class INinboxContactDetail extends INinboxContact
 	}
 
 	/**
+	 * @param string $WorkPhone WorkPhone
+	 */
+	public function setWorkPhone($WorkPhone) {
+	  $this->WorkPhone = (string)$WorkPhone;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getWorkPhone() {
 	  return $this->WorkPhone;
+	}
+
+	/**
+	 * @param string $Fax Fax
+	 */
+	public function setFax($Fax) {
+	  $this->Fax = (string)$Fax;
 	}
 
 	/**
@@ -825,17 +752,38 @@ class INinboxContactDetail extends INinboxContact
 	}
 
 	/**
+	 * @param array $OptIn OptIn
+	 */
+	public function setOptIn($OptIn) {
+	  $this->Opt_In = $OptIn;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getOptIn() {
 	  return $this->Opt_In;
 	}
-	
+
+	/**
+	 * @param array $ActiveLists ActiveLists
+	 */
+	public function setActiveLists($ActiveLists) {
+	  $this->ActiveLists = $ActiveLists;
+	}
+
 	/**
 	 * @return array
 	 */
 	public function getActiveLists() {
 	  return $this->ActiveLists;
+	}
+
+	/**
+	 * @param array $UnsubscribedLists UnsubscribedLists
+	 */
+	public function setUnsubscribedLists($UnsubscribedLists) {
+	  $this->UnsubscribedLists = $UnsubscribedLists;
 	}
 
 	/**
@@ -846,10 +794,24 @@ class INinboxContactDetail extends INinboxContact
 	}
 
 	/**
+	 * @param array $DeletedLists DeletedLists
+	 */
+	public function setDeletedLists($DeletedLists) {
+	  $this->DeletedLists = $DeletedLists;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getDeletedLists() {
 	  return $this->DeletedLists;
+	}
+	
+	/**
+	 * @param array $UnconfirmedLists UnconfirmedLists
+	 */
+	public function setUnconfirmedLists($UnconfirmedLists) {
+	  $this->UnconfirmedLists = $UnconfirmedLists;
 	}
 
 	/**
@@ -860,10 +822,24 @@ class INinboxContactDetail extends INinboxContact
 	}
 
 	/**
+	 * @param array $BouncedLists BouncedLists
+	 */
+	public function setBouncedLists($BouncedLists) {
+	  $this->BouncedLists = $BouncedLists;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getBouncedLists() {
 	  return $this->BouncedLists;
+	}
+
+	/**
+	 * @param array $ListIDs ListIDs
+	 */
+	public function setListIDs($ListIDs) {
+	  $this->ListIDs = $ListIDs;
 	}
 
 	/**
@@ -874,6 +850,13 @@ class INinboxContactDetail extends INinboxContact
 	}
 
 	/**
+	 * @param boolean $Resubscribe Resubscribe
+	 */
+	public function setResubscribe($Resubscribe) {
+	  $this->Resubscribe = $Resubscribe;
+	}
+
+	/**
 	 * @return boolean
 	 */
 	public function getResubscribe() {
@@ -881,10 +864,24 @@ class INinboxContactDetail extends INinboxContact
 	}
 
 	/**
+	 * @param boolean $SendConfirmationEmail SendConfirmationEmail
+	 */
+	public function setSendConfirmationEmail($SendConfirmationEmail) {
+	  $this->SendConfirmationEmail = $SendConfirmationEmail;
+	}
+
+	/**
 	 * @return boolean
 	 */
 	public function getSendConfirmationEmail() {
 	  return $this->SendConfirmationEmail;
+	}
+
+	/**
+	 * @param boolean $AddContactToAutoresponderCycle AddContactToAutoresponderCycle
+	 */
+	public function setAddContactToAutoresponderCycle($AddContactToAutoresponderCycle) {
+	  $this->AddContactToAutoresponderCycle = $AddContactToAutoresponderCycle;
 	}
 
 	/**
@@ -930,7 +927,7 @@ class INinboxContactDetail extends INinboxContact
 		}
 		else {
 			$new_xml = $this->postDataWithVerb("/contacts/create.".$this->getFormat(), $reqDataXML, "POST");
-			$this->checkForErrors("Contact", 201);
+			$this->checkForErrors("Contact", array(200, 201));
 		}
 		if($this->getFormat() == "xml") {
 			$object = simplexml_load_string($new_xml);
@@ -1019,7 +1016,7 @@ class INinboxContactDetail extends INinboxContact
 
 }
 
-class INinboxContactStatistics
+class INinboxContactStatistics extends INinboxAPI
 {
 	/**
 	 * @var int

@@ -3,8 +3,8 @@ require_once("config.php");
 require_once("lib/INinboxAPI.class.php");
 require_once("lib/INinboxFromFields.class.php");
 $action=$_GET['action'];
-//$action="stats";
 
+# Get all fromfields
 if($action=="list") {
 	try {
 		$from_obj = new INinboxFromFields();
@@ -13,16 +13,14 @@ if($action=="list") {
 		$from_obj->setToken($api_key);
 		$listid = 160;
 		$param = array();
-		//$param['Email']="helloone@jabong.com";
-		//$param['Name']="";
 		$param['OrderField']='status';
 		$param['OrderDirection']="desc";
 		$fromfields = $from_obj->get($param);
-		//echo "<pre>";print_r($fromfields);exit;
 	}
 	catch (Exception $e)
 	{
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
 	}
 	$cnt = count($fromfields);
 	if($cnt > 0) { ?>
@@ -54,65 +52,85 @@ if($action=="list") {
 	<?
 	}
 }
+
+# Creating a from field
 else if($action=="add") {
 	try {
 		$from_obj = new INinboxFromFields();
 		$from_obj->debug = false;
 		$from_obj->setFormat("xml");
 		$from_obj->setToken($api_key);
-		$listid = 160;
 		$from_obj->setFromName("APITest");
-		$from_obj->setFromEmail("apitest@2242014.com");
-		$from_obj->save();
+		$from_obj->setFromEmail("piyush.nayee@horizoncore.com");
+		$res = $from_obj->save();
+		echo $res['Message'];exit;
 	}
 	catch (Exception $e)
 	{
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
 	}
 }
+
+# Verifying a from field
 else if($action=="verify") {
 	try {
 		$from_obj = new INinboxFromFields();
 		$from_obj->debug = false;
 		$from_obj->setFormat("xml");
 		$from_obj->setToken($api_key);
-		$id = 833;
-		$code = "51651000";
-		$from_obj->verify($id, $code);
+		$id = "12532";
+		$code = "23318978";
+		$arr = $from_obj->verify($id, $code);
 		echo $arr->Message;
 	}
 	catch (Exception $e)
 	{
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
 	}
 }
+
+# Set fromfield as default
 else if($action=="set_default") {
 	try {
 		$from_obj = new INinboxFromFields();
 		$from_obj->debug = false;
 		$from_obj->setFormat("xml");
 		$from_obj->setToken($api_key);
-		$id = 681;
+		$id = "537";
 		$arr = $from_obj->setDefault($id);
 		echo $arr->Message;
 	}
 	catch (Exception $e)
 	{
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
 	}
 }
+
+# Deleting a fromfield
 else if($action=="delete") {
 	try {
 		$from_obj = new INinboxFromFields();
 		$from_obj->debug = false;
 		$from_obj->setFormat("xml");
 		$from_obj->setToken($api_key);
-		$id = 833;
+		$id = "12532";
 		$from_obj->setFromFieldID($id);
 		$from_obj->delete();
 	}
 	catch (Exception $e)
 	{
-		echo $e->getCode().":".$e->getMessage();
+		echo "Error Message: ".$e->getMessage();
+		echo "<br />Error Code: ".$e->getCode();
+	}
+}
+else{
+	if($action==""){
+		echo ACTION_NOT_FOUND;
+	}
+	else{
+		echo sprintf(INVALID_ACTION, 'list, add, verify, set_default or delete');
 	}
 }

@@ -1,5 +1,4 @@
 <?php
-# Created by MS as on Saturday, March 08, 2014
 class INinboxFromFields extends INinboxAPI
 {
 	/**
@@ -148,7 +147,7 @@ class INinboxFromFields extends INinboxAPI
 	}
 
 	/**
-	 * @param int $if FromFieldID
+	 * @param int $id FromFieldID
 	 * @param int $code VerificationCode
 	 *
 	 * @return object
@@ -166,8 +165,7 @@ class INinboxFromFields extends INinboxAPI
 	}
 
 	/**
-	 * @param int $if FromFieldID
-	 * @param int $code VerificationCode
+	 * @param int $id FromFieldID
 	 *
 	 * @return object
 	 * @throws Exception
@@ -212,7 +210,7 @@ class INinboxFromFields extends INinboxAPI
 		{
 			$fromfields_obj = new INinboxFromFields($this);
 			$fromfields_obj->setFormat($this->getFormat());
-			$fromfields_obj->loadFromObject($fromfields); # Response data
+			$fromfields_obj->loadFromObject($fromfields); 
 			$return[] = $fromfields_obj;
 		}
 		return $return;
@@ -230,7 +228,13 @@ class INinboxFromFields extends INinboxAPI
 			$person_xml = $this->toJSON();
 		$new_xml = $this->postDataWithVerb("/account/fromfields/create." . $this->getFormat(), $person_xml, "POST");
 		$this->checkForErrors("FromFields", 201);
-		return true;
+		if($this->getFormat() == "xml") {
+			$object = simplexml_load_string($new_xml);
+		}
+		else if($this->getFormat() == "json") {
+			$object = json_decode($new_xml);
+		}
+		return (array)$object;
 	}
 	
 	/**
@@ -261,7 +265,6 @@ class INinboxFromFields extends INinboxAPI
 	}
 		
 	/**
-	 * @return array
 	 * @throws Exception
 	 */
 	public function delete()
