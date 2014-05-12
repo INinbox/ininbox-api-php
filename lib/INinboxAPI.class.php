@@ -75,7 +75,7 @@ class INinboxAPI extends INinboxPaging
 	public function __construct()
 	{
 		$this->format = "xml";
-		$this->url = "http://192.168.32.141/v1";
+		$this->url = "http://api.ininbox.com/v1";
 
 		$this->curl = curl_init();
 		curl_setopt($this->curl,CURLOPT_RETURNTRANSFER,true);
