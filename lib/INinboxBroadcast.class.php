@@ -1,9 +1,4 @@
 <?php
-# -------------------------------------------------------------
-# Created by SR as on 7 Mar 2014
-# Modified by PN as on 8 Mar 2014
-# Last modified by MS as on Tuesday, April 22, 2014
-# -------------------------------------------------------------
 class INinboxBroadcast extends INinboxAPI 
 {
 	/**
@@ -336,12 +331,20 @@ class INinboxBroadcast extends INinboxAPI
 	}
 
 	/**
+	 * return array
 	 * @throws Exception
 	 */
 	public function delete()
 	{
-		$this->postDataWithVerb("/broadcasts/" . $this->getBroadcastID() . "/delete." . $this->getFormat(), "", "DELETE");
+		$result = $this->postDataWithVerb("/broadcasts/" . $this->getBroadcastID() . "/delete." . $this->getFormat(), "", "DELETE");
 		$this->checkForErrors("Broadcast", 200);	
+		if($this->getFormat() == "xml") {
+			$object = (array)simplexml_load_string($result);
+		}
+		else if($this->getFormat() == "json") {
+			$object = (array)json_decode($result);
+		}
+		return $object;
 	}
 }
 
@@ -1814,6 +1817,23 @@ class INinboxBroadcastAction extends INinboxAPI
 	 */
 	public $ExcludeSuppressionIDs;
 	
+
+	/**
+	 * Constructor
+	 */
+	public function INinboxBroadcastAction()
+	{
+		parent::__construct();
+
+		$this->IncludeListIDs = array();
+		$this->ExcludeListIDs = array();
+		$this->IncludeSegmentIDs = array();
+		$this->ExcludeSegmentIDs = array();
+		$this->ExcludeSuppressionIDs = array();
+		$this->setTrackOpenRate(True);
+		$this->setRemoveFooter(False);
+	}
+
 	/**
 	 * @param object $obj Data Object
 	 *
@@ -2001,26 +2021,45 @@ class INinboxBroadcastAction extends INinboxAPI
 	}
 
 	/**
-	 * @return boolean
+	 * @return array
 	 * @throws Exception
 	 */
 	public function save()
 	{
 		if($this->getFormat() == "xml") {
-			# Creating seperate tag of ListID
-			$this->setIncludeListIDs(array('ListID'=>$this->getIncludeListIDs()));
-			$this->setExcludeListIDs(array('ListID'=>$this->getExcludeListIDs()));
-			$this->setIncludeSegmentIDs(array('SegmentID'=>$this->getIncludeSegmentIDs()));
-			$this->setExcludeSegmentIDs(array('SegmentID'=>$this->getExcludeSegmentIDs()));
-			$this->setExcludeSuppressionIDs(array('SuppressionID'=>$this->getExcludeSuppressionIDs()));
+			# Creating tag of ListID inside IncludeListIDs
+			if(is_array($this->IncludeListIDs) && count($this->IncludeListIDs))
+				$this->setIncludeListIDs(array('ListID'=>$this->IncludeListIDs));
+
+			# Creating tag of ListID inside ExcludeListIDs
+			if(is_array($this->ExcludeListIDs) && count($this->ExcludeListIDs))
+				$this->setExcludeListIDs(array('ListID'=>$this->ExcludeListIDs));
+			
+			# Creating tag of ListID inside IncludeSegmentIDs
+			if(is_array($this->IncludeSegmentIDs) && count($this->IncludeSegmentIDs))
+				$this->setIncludeSegmentIDs(array('SegmentID'=>$this->IncludeSegmentIDs));
+			
+			# Creating tag of ListID inside ExcludeSegmentIDs
+			if(is_array($this->ExcludeSegmentIDs) && count($this->ExcludeSegmentIDs))
+				$this->setExcludeSegmentIDs(array('SegmentID'=>$this->ExcludeSegmentIDs));
+			
+			# Creating tag of ListID inside ExcludeSuppressionIDs
+			if(is_array($this->ExcludeSuppressionIDs) && count($this->ExcludeSuppressionIDs))
+				$this->setExcludeSuppressionIDs(array('SuppressionID'=>$this->ExcludeSuppressionIDs));
 
 			$person_xml = $this->toXML();
 		}
 		else
 			$person_xml = $this->toJSON();
-		$new_xml = $this->postDataWithVerb("/broadcasts/draft." . $this->getFormat(), $person_xml, "POST");
-		$this->checkForErrors("Broadcast", 201);
-		return true;
+		$new_data = $this->postDataWithVerb("/broadcasts/draft." . $this->getFormat(), $person_xml, "POST");
+
+		if($this->getFormat() == "xml") {
+			$object = simplexml_load_string($new_data);
+		}
+		else if($this->getFormat() == "json") {
+			$object = json_decode($new_data);
+		}
+		return (array)$object;
 	}
 	
 	/**
@@ -2033,7 +2072,7 @@ class INinboxBroadcastAction extends INinboxAPI
 		
 		foreach($fields as $field) {
 			if($field == "IncludeListIDs") {
-				if( isset($this->IncludeListIDs) && is_array( $this->IncludeListIDs) ) {
+				if(is_array( $this->IncludeListIDs) &&  count($this->IncludeListIDs)) {
 					$xml_sub1=array();
 					foreach( $this->IncludeListIDs as $key => $val ) {
 						foreach( $val as $k1 => $v1) {
@@ -2046,7 +2085,7 @@ class INinboxBroadcastAction extends INinboxAPI
 				}
 			}
 			else if($field == "ExcludeListIDs") {
-				if( isset($this->ExcludeListIDs) && is_array( $this->ExcludeListIDs) ) {
+				if( is_array( $this->ExcludeListIDs) && count($this->ExcludeListIDs) ) {
 					$xml_sub2=array();
 					foreach( $this->ExcludeListIDs as $key => $val ) {
 						foreach( $val as $k1 => $v1) {
@@ -2059,7 +2098,7 @@ class INinboxBroadcastAction extends INinboxAPI
 				}
 			}
 			else if($field == "IncludeSegmentIDs") {
-				if( isset($this->IncludeSegmentIDs) && is_array( $this->IncludeSegmentIDs) ) {
+				if(is_array( $this->IncludeSegmentIDs) && count( $this->IncludeSegmentIDs)) {
 					$xml_sub3=array();
 					foreach( $this->IncludeSegmentIDs as $key => $val ) {
 						foreach( $val as $k1 => $v1) {
@@ -2072,7 +2111,7 @@ class INinboxBroadcastAction extends INinboxAPI
 				}
 			}
 			else if($field == "ExcludeSegmentIDs") {
-				if( isset($this->ExcludeSegmentIDs) && is_array( $this->ExcludeSegmentIDs) ) {
+				if(is_array( $this->ExcludeSegmentIDs) && count( $this->ExcludeSegmentIDs)) {
 					$xml_sub4=array();
 					foreach( $this->ExcludeSegmentIDs as $key => $val ) {
 						foreach( $val as $k1 => $v1) {
@@ -2085,7 +2124,7 @@ class INinboxBroadcastAction extends INinboxAPI
 				}
 			}
 			else if($field == "ExcludeSuppressionIDs") {
-				if( isset($this->ExcludeSuppressionIDs) && is_array( $this->ExcludeSuppressionIDs) ) {
+				if(is_array( $this->ExcludeSuppressionIDs) &&  count($this->ExcludeSuppressionIDs)) {
 					$xml_sub5=array();
 					foreach( $this->ExcludeSuppressionIDs as $key => $val ) {
 						foreach( $val as $k1 => $v1) {

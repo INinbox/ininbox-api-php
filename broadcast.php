@@ -822,11 +822,11 @@ else if ($action == "add") {
 
 		$br_obj->setIncludeListIDs($i_list_arr);
 		$br_obj->setExcludeListIDs($e_list_arr);
-		$br_obj->setIncludeSegmentIDs($i_segment_arr);
-		$br_obj->setExcludeSegmentIDs($e_segment_arr);
+		//$br_obj->setIncludeSegmentIDs($i_segment_arr);
+		//$br_obj->setExcludeSegmentIDs($e_segment_arr);
 		$br_obj->setExcludeSuppressionIDs($e_supp_arr);
-		//echo "<pre>";print_r($obj);exit;
-		$br_obj->save();
+		$res = $br_obj->save();
+		echo $res['Message'];
 		exit;
 	}
 	catch (Exception $e)
